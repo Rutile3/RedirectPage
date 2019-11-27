@@ -1,34 +1,56 @@
 (function () {
-  const project_url = "RutileDiary";
 
   const day_of_week = ["日", "月", "火", "水", "木", "金", "土"];
-  function getWeek(date) { return day_of_week[date.getDay()]; }
-  function getYY(date) { return (""  + (date.getFullYear() )).slice(-2); }
-  function getMM(date) { return ("0" + (date.getMonth() + 1)).slice(-2); }
-  function getDD(date) { return ("0" +  date.getDate()      ).slice(-2); }
-  function getYYMM(date) { return getYY(date) + getMM(date); }
-  function getMonthDays(date) { return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate(); }
+  const getWeek = (date) => { return day_of_week[date.getDay()]; }
+  const getYY = (date) => { return (""  + (date.getFullYear() )).slice(-2); }
+  const getMM = (date) => { return ("0" + (date.getMonth() + 1)).slice(-2); }
+  const getDD = (date) => { return ("0" +  date.getDate()      ).slice(-2); }
+  const getYYMM = (date) => { return getYY(date) + getMM(date); }
+  const getMonthDays = (date) => { return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate(); }
 
-  // URLパラメータから指定年月を取得しDate型で返す
-  // URLパラメータに意図した値がない場合は今日を返す
-  function getCreateDate() {
-    const url_search = location.search.substr(1).split("&")
-    for(var i = 0; i < url_search.length; i++) {
-      const key = url_search[i].split("=");
-      const exist = key[0] === "yymm";
-      const is_yymm_format = /^(\d{2}(0[1-9]|1[0-2]))$/.test(key[1]);
-      if (exist && is_yymm_format){
-        const yy = key[1].substr(0, 2);
-        const mm = key[1].substr(2, 2);
-        return new Date("20" + yy + "-" + mm);
-      }
-    }
+  // URLパラメータを連想配列で取得します。
+  const getUrlParameters = () => {
+    let params = {};
 
-    return new Date();
+    // 先頭の一文字の「?」を削除し、「&」区切りで各パラメータ取得し、
+    // "="でパラメータ名と値を分割し連想配列で取得する
+    location.search.substr(1).split("&").forEach(e => {
+      let param = e.split("=");
+      params[param[0]] = param[1];
+    });
+
+    return params
   }
 
-  // 月予定表を作成する年月の取得
-  const create_date = getCreateDate();
+  // URLパラメータからプロジェクトのURLを取得します。
+  const getProjectUrl = (url_params) => {
+    // 要素と値が存在する場合
+    if (url_params["project_url"]) {
+      return "https://scrapbox.io/" + url_params["project_url"] + "/"
+    }
+    else {
+      return "https://scrapbox.io/RutileTest/"
+    }
+  }
+
+  // URLパラメータから指定年月をDate型で取得します。
+  const getCreateDate = (url_params) => {
+    if (url_params["yymm"] && /^(\d{2}(0[1-9]|1[0-2]))$/.test(url_params["yymm"])) {
+      const yy = url_params["yymm"].substr(0, 2);
+      const mm = url_params["yymm"].substr(2, 2);
+      return new Date("20" + yy + "-" + mm);
+    }
+    else {
+      return new Date();
+    }
+  }
+
+  // URLパラメータとリダイレクトするプロジェクトのURLを取得
+  const url_params = getUrlParameters();
+  const project_url = getProjectUrl(url_params);
+
+  // 月予定表を作成する年月を取得
+  const create_date = getCreateDate(url_params);
   const yy = getYY(create_date);
   const mm = getMM(create_date);
 
@@ -40,18 +62,17 @@
   const last_and_next_month = "[**** [" + getYYMM(last_month) + "]←→[" + getYYMM(next_month) + "]]";
   let body = last_and_next_month + "\n\n";
 
-  // カレンダー作成
+  // カレンダーを作成
   body += "[*** 20" + yy + "年" + mm + "月]\n";
   const month_days = getMonthDays(create_date);
-  for (let i = 1; i <= month_days; i++) {
-    const tmp_date = new Date(create_date.getFullYear(), create_date.getMonth(), i);
+  for (let d = 1; d <= month_days; d++) {
+    const tmp_date = new Date("20" + yy + "-" + mm + "-" + d);
     const dd = getDD(tmp_date);
-    body += "[" + yy + mm + dd + "] ";
-    body += getWeek(tmp_date) + " \n";
+    body += "[" + yy + mm + dd + "] "+ getWeek(tmp_date) + " \n";
   }
 
   body += "\n" + last_and_next_month + "\n\n";
   body += "#月予定表\n";
 
-  location.href = "https://scrapbox.io/" + project_url + "/" + yy + mm + "?body=" + encodeURIComponent(body);
+  location.href = project_url + yy + mm + "?body=" + encodeURIComponent(body);
 })();
