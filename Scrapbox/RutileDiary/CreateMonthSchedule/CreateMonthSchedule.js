@@ -1,11 +1,10 @@
 
 (() => {
-
   const day_of_week = ["日", "月", "火", "水", "木", "金", "土"];
   const getWeek = (date) => { return day_of_week[date.getDay()]; }
   const getYY = (date) => { return (""  + (date.getFullYear() )).slice(-2); }
   const getMM = (date) => { return ("0" + (date.getMonth() + 1)).slice(-2); }
-  const getDD = (date) => { return ("0" +  date.getDate()      ).slice(-2); }
+  const getDD = (date) => { return ("0" + (date.getDate()     )).slice(-2); }
   const getYYMM = (date) => { return getYY(date) + getMM(date); }
   const getMonthDays = (date) => { return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate(); }
 

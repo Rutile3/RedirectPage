@@ -1,6 +1,5 @@
 
 (() => {
-
   // URLパラメータを連想配列で取得します。
   const getUrlParameters = () => {
     let params = {};
@@ -43,7 +42,7 @@
   const project_url = getProjectUrl(url_params);
 
   const date = getCreateDate(url_params);
-  const yy = (""  +  date.getFullYear()  ).slice(-2);
+  const yy = (""  + (date.getFullYear() )).slice(-2);
   const mm = ("0" + (date.getMonth() + 1)).slice(-2);
 
   location.href = project_url + yy + mm;
