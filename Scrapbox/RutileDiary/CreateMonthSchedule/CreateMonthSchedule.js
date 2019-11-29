@@ -1,4 +1,5 @@
-(function () {
+
+(() => {
 
   const day_of_week = ["日", "月", "火", "水", "木", "金", "土"];
   const getWeek = (date) => { return day_of_week[date.getDay()]; }
@@ -46,7 +47,7 @@
   }
 
   // URLパラメータとリダイレクトするプロジェクトのURLを取得
-  const url_params = getUrlParameters();
+  const url_params  = getUrlParameters();
   const project_url = getProjectUrl(url_params);
 
   // 月予定表を作成する年月を取得
