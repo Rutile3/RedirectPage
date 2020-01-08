@@ -15,17 +15,17 @@
       params[param[0]] = param[1];
     });
 
-    return params
+    return params;
   }
 
   // URLパラメータからプロジェクトのURLを取得します。
   const getProjectUrl = (url_params) => {
     // 要素と値が存在する場合
     if (url_params["project_url"]) {
-      return "https://scrapbox.io/" + url_params["project_url"] + "/"
+      return "https://scrapbox.io/" + url_params["project_url"] + "/";
     }
     else {
-      return "https://scrapbox.io/RutileTest/"
+      return "https://scrapbox.io/RutileTest/";
     }
   }
 
