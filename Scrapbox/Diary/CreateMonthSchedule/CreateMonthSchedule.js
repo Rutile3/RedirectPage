@@ -29,7 +29,7 @@
       return "https://scrapbox.io/" + url_params["project_url"] + "/"
     }
     else {
-      return "https://scrapbox.io/RutileTest/"
+      return "https://scrapbox.io/Rutile3-Test/"
     }
   }
 
